@@ -1,5 +1,7 @@
 package org.example.repository
 
+import org.example.exception.DepositException
+import org.example.exception.WithdrawalException
 import org.example.model.Account
 import org.example.model.SavingsAccount
 import javax.inject.Inject
@@ -22,7 +24,6 @@ class InMemoryAccountRepositoryImpl @Inject constructor() : AccountRepository {
 
     override fun createAccount(account: Account) {
         if (findAccount(account.accountNumber) != null) {
-//            throw RuntimeException("${account.accountNumber} account already exists ->")
             println("${account.accountNumber} account already exists!")
         } else {
             accounts.add(account)
@@ -56,8 +57,7 @@ class InMemoryAccountRepositoryImpl @Inject constructor() : AccountRepository {
         return if (account.debit(transferAmount)) {
             true
         } else {
-            println("Withdrawal failed!")
-            false
+            throw WithdrawalException("Withdrawal failed!")
         }
     }
 
@@ -68,8 +68,7 @@ class InMemoryAccountRepositoryImpl @Inject constructor() : AccountRepository {
         return if (account.credit(transferAmount)) {
             true
         } else {
-            println("Deposit failed!")
-            false
+            throw DepositException("Deposit failed!")
         }
     }
 }

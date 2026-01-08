@@ -1,5 +1,7 @@
 package org.example.model
 
+import org.example.exception.InsufficientFundsException
+
 abstract class Account(
     val accountNumber: String,
     val userId: String,
@@ -10,7 +12,7 @@ abstract class Account(
     fun getBalance(): Double = currentBalance
 
     fun debit(amount: Double): Boolean {
-        if (currentBalance < amount) return false.also { println("Insufficient balance!") }
+        if (currentBalance < amount) throw InsufficientFundsException("Insufficient funds for the withdrawal!")
 
         currentBalance -= amount
         return true

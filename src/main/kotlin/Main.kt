@@ -1,6 +1,9 @@
 package org.example
 
 import org.example.di.DaggerBankComponent
+import org.example.exception.DepositException
+import org.example.exception.InsufficientFundsException
+import org.example.exception.WithdrawalException
 import org.example.model.CheckingAccount
 import org.example.model.SavingsAccount
 import org.example.model.User
@@ -265,10 +268,18 @@ fun transferBalance(bankService: BankService) {
 
     when (transferConfirm) {
         "1" -> {
-            val transfer =
-                bankService.transferMoney(senderAccountNumber, receiverAccountNumber, transferAmount)
-            if (transfer) {
-                println("Transfer money(BDT) $transferAmount successful!\n")
+            try {
+                val transfer =
+                    bankService.transferMoney(senderAccountNumber, receiverAccountNumber, transferAmount)
+                if (transfer) {
+                    println("Transfer money(BDT) $transferAmount successful!\n")
+                }
+            } catch (e: InsufficientFundsException) {
+                println(e.message)
+            } catch (e: WithdrawalException) {
+                println(e.message)
+            } catch (e: DepositException) {
+                println(e.message)
             }
         }
 
